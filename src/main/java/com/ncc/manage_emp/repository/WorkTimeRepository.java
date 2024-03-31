@@ -16,25 +16,29 @@ public interface WorkTimeRepository extends JpaRepository<WorkTime,Long> {
 
     Boolean existsByUsersId(Long id);
 
-    @Modifying
-    @Query("DELETE FROM WorkTime w WHERE w.id = :id")
-    void deleteById(Long id);
+//    @Modifying
+//    @Query("DELETE FROM WorkTime w WHERE w.id = :id")
+//    void deleteById(Long id);
+
+    List<WorkTime> findAllByUsersId(Long userId);
 
 
 
-    @Query("SELECT w FROM WorkTime w WHERE w.users.id = :userid ORDER BY w.version DESC LIMIT 1")
-    WorkTime findLastVersioning(@Param("userid") Long userid);
+//    @Query("SELECT w FROM WorkTime w WHERE w.users.id = :userid ORDER BY w.version DESC LIMIT 1")
+//    WorkTime findLastVersioning(@Param("userid") Long userid);
 
-    @Query("SELECT w.users.id AS userId, MAX(w.version) AS maxVersion , w.id as id " +
-            "FROM WorkTime w " +
-            "WHERE NOT EXISTS (" +
-            "    SELECT 1 " +
-            "    FROM WorkTime w2 " +
-            "    WHERE w2.users.id = w.users.id " +
-            "    AND w2.version > w.version" +
-            ") " +
-            "GROUP BY w.users.id, w.id")
-    List<Object[]> findMaxVersionForEachUser();
+//    @Query("SELECT w.users.id AS userId, MAX(w.version) AS maxVersion , w.id as id " +
+//            "FROM WorkTime w " +
+//            "WHERE NOT EXISTS (" +
+//            "    SELECT 1 " +
+//            "    FROM WorkTime w2 " +
+//            "    WHERE w2.users.id = w.users.id " +
+//            "    AND w2.version > w.version" +
+//            ") " +
+//            "GROUP BY w.users.id, w.id")
+//    List<Object[]> findMaxVersionForEachUser();
+
+    WorkTime findWorkTimeByUsersIdAndIsPrimaryWorkingTrue(Long userId);
 
 
 

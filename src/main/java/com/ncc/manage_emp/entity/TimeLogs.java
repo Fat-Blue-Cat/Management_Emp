@@ -3,20 +3,17 @@ package com.ncc.manage_emp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "timelogs")
-public class TimeLogs {
+public class TimeLogs implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,12 +30,15 @@ public class TimeLogs {
     @Column(name = "check_date")
     private LocalDate checkDate;
 
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "work_time_id")
-    private WorkTime workTime;
-
-
+    @ManyToOne()
+//    cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+//            CascadeType.DETACH, CascadeType.REFRESH}
+    @JoinColumn(name = "user_id")
+    private Users users;
 
 
 }

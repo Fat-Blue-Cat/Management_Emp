@@ -67,12 +67,12 @@ public class AuthServiceImpl implements AuthService {
 
         Users user = new Users();
         user.setName(signupDto.getName());
-        System.out.println(signupDto.getPassword());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
         user.setEmail(signupDto.getEmail());
         user.setRoleName("USER");
         user.setUserName(signupDto.getUsername());
         user.setCreateAt(new Date());
+        user.setCheckinCode(null);
 
         Users savedUSer  = userRepository.save(user);
 
@@ -109,6 +109,8 @@ public class AuthServiceImpl implements AuthService {
             user.setName(name);
             user.setRoleName("USER");
             user.setUserName(email);
+            user.setCreateAt(new Date());
+            user.setCheckinCode(null);
 
             userRepository.save(user);
         }

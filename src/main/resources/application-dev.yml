@@ -1,0 +1,9 @@
+
+
+my:
+  property:
+#    name: ${username}
+      name: "kk"
+
+
+#

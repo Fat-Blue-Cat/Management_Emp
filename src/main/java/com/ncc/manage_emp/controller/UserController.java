@@ -1,51 +1,42 @@
 package com.ncc.manage_emp.controller;
 
-import com.ncc.manage_emp.dto.JWTAuthDto;
-import com.ncc.manage_emp.dto.UserDto;
-import com.ncc.manage_emp.entity.TimeLogs;
-import com.ncc.manage_emp.entity.WorkTime;
-import com.ncc.manage_emp.repository.TimeLogRepository;
-import com.ncc.manage_emp.repository.WorkTimeRepository;
+
 import com.ncc.manage_emp.response.ResponseData;
 import com.ncc.manage_emp.service.AuthService;
 import com.ncc.manage_emp.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
-@RestController
+
+@Controller // RETURN VIEW, HTML
+@ResponseBody // RETURN JSON, XML
 @RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private AuthService authService;
 
-
-    @Autowired
     private UserService userService;
 
-    @Autowired
-    private TimeLogRepository timeLogRepository;
+    @Autowired // Example Setter Injection
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
-    @Autowired
-    private WorkTimeRepository workTimeRepository;
 
-//    @GetMapping("/test")
-//    public ResponseEntity<?> getUser(){
-//        return new ResponseEntity<>("test", HttpStatus.OK);
-//    }
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllTimeLog(@RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateFilter ){
+    public ResponseEntity<?> getAllTimeLog(@RequestParam Long userId, @RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate ){
 //
         ResponseData responseData = new ResponseData();
-        dateFilter = dateFilter!=null ? dateFilter: LocalDateTime.now();
+//        dateFilter = dateFilter!=null ? dateFilter: LocalDate.now();
         try {
-            responseData.setData(userService.getAllTimeLogByUserId(userId, dateFilter));
+            responseData.setData(userService.getAllTimeLogByUserId(userId, startDate,endDate));
         }catch (Exception e){
             responseData.setStatus(400);
             responseData.setDesc(e.getMessage());
@@ -104,7 +95,7 @@ public class UserController {
         dateFilter = dateFilter!=null ? dateFilter: LocalDate.now();
         try {
             System.out.println(dateFilter);
-            responseData.setData(timeLogRepository.getTimeLogFail(userId, dateFilter));
+            responseData.setData(userService.getAllTimeLogFailByMonth(userId, dateFilter));
 //            responseData.setData(timeLogRepository.findError());
 
             System.out.println(dateFilter + ">>>>>>>>>");

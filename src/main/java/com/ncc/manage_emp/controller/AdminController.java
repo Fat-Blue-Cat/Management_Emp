@@ -1,36 +1,27 @@
 package com.ncc.manage_emp.controller;
 
 import com.ncc.manage_emp.dto.request.WorkTimeDto;
-import com.ncc.manage_emp.repository.TimeLogRepository;
-import com.ncc.manage_emp.repository.UserRepository;
-import com.ncc.manage_emp.repository.WorkTimeRepository;
 import com.ncc.manage_emp.response.ResponseData;
 import com.ncc.manage_emp.service.AdminService;
 import com.ncc.manage_emp.service.EmailService;
+import com.ncc.manage_emp.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.context.Context;
+
 
 import java.time.LocalDate;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/admin")
 public class AdminController {
-    AdminService adminService;
+    private final AdminService adminService;
+    private final EmailService emailService;
+    private final UserService userService;
 
-    WorkTimeRepository workTimeRepository;
-
-    TimeLogRepository timeLogRepository;
-
-    EmailService emailService;
-
-    @Autowired
-    UserRepository userRepository;
 
     @GetMapping("/getAll")
     public ResponseEntity<?> getAllUser(){
@@ -132,7 +123,6 @@ public class AdminController {
         try {
 
             adminService.deleteWorkTimeById(id);
-//            workTimeRepository.deleteById(id);
             responseData.setData("Xóa thành công");
         }catch (Exception e){
             responseData.setStatus(400);
@@ -170,9 +160,7 @@ public class AdminController {
         try {
 
 
-//            responseData.setData(workTimeRepository.findMaxVersionForEachUser());
             responseData.setData( adminService.createAllTimeLogToDay());
-//            responseData.setData( timeLogRepository.getAllWorkTimeNotExistToDay(LocalDate.now()));
 
         }catch (Exception e){
             responseData.setStatus(400);
@@ -185,14 +173,15 @@ public class AdminController {
     }
 
 
-    @GetMapping("/getAll1")
-    public ResponseEntity<?> getAllUserToDayCheckInOrCheckOut(){
+    @GetMapping("/getAllByTimeWeek")
+    public ResponseEntity<?> getAllUserToDayCheckInOrCheckOut(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate){
+        System.out.println(startDate);
+        System.out.println(endDate);
         ResponseData responseData = new ResponseData();
 
         try {
+            responseData.setData(adminService.getAllTimeLogByCheckDate(startDate,endDate));
 
-//            responseData.setData(userRepository.getAllUserByTimeCheckin());
-            responseData.setData(userRepository.getAllUserByTimeCheckin(LocalDate.now()));
         }catch (Exception e){
             responseData.setStatus(400);
             responseData.setDesc(e.getMessage());
@@ -202,6 +191,67 @@ public class AdminController {
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
+
+    @GetMapping("/getAllTimeLogFailByMoth")
+    public ResponseEntity<?> getAllUserFailCheckInByMonth(@RequestParam LocalDate checkDate){
+        ResponseData responseData = new ResponseData();
+        System.out.println(checkDate +">>>>>>>>>");
+
+        try {
+//            responseData.setData(userRepository.getAllUserByTimeCheckin(checkDate));
+            responseData.setData(adminService.getAllTimeLogFailByMonth(checkDate));
+
+        }catch (Exception e){
+            responseData.setStatus(400);
+            responseData.setDesc(e.getMessage());
+            responseData.setSuccess(false);
+            responseData.setData(null);
+        }
+
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+    @GetMapping("/notify-all-forget-checkin")
+    public ResponseEntity<?> getAllUserForgetCheckIn() throws Exception {
+        ResponseData responseData = new ResponseData();
+        try{
+            adminService.notifyForgetCheckIn();
+            responseData.setData("All member received mail!");
+        }catch (Exception e){
+            throw new Exception("Lỗi gửi mail");
+        }
+
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/notify-all-forget-checkout")
+    public ResponseEntity<?> getAllUserForgetCheckOut() throws Exception {
+        ResponseData responseData = new ResponseData();
+        try{
+            adminService.notifyForgetCheckOut();
+            responseData.setData("All member received mail!");
+        }catch (Exception e){
+            throw new Exception("Lỗi gửi mail");
+        }
+
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable Long id) throws Exception {
+        ResponseData responseData = new ResponseData();
+        responseData.setData(adminService.findUserById(id));
+//        try{
+//            adminService.notifyForgetCheckOut();
+//            responseData.setData("All member received mail!");
+//        }catch (Exception e){
+//            throw new Exception("Lỗi gửi mail");
+//        }
+
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
 
 
 

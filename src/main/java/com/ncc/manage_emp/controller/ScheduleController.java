@@ -1,7 +1,7 @@
 package com.ncc.manage_emp.controller;
 
 import com.ncc.manage_emp.dto.request.SchedulerDto;
-import com.ncc.manage_emp.service.Scheduler;
+import com.ncc.manage_emp.service.AdminService;
 import com.ncc.manage_emp.service.TaskSchedulingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,18 +18,19 @@ public class ScheduleController {
     @Autowired
     private TaskSchedulingService taskSchedulingService;
 
+
+
     @Autowired
-    private Scheduler scheduler;
+    private AdminService adminService;
 
 
     @PostMapping(path = "/taskdef", consumes = "application/json")
     public void scheduleATask(@RequestBody SchedulerDto schedulerDto) {
+
         System.out.println("Scheduling a task...");
-        taskSchedulingService.scheduleATask(schedulerDto.getActionType(), () -> {
-//            System.out.println("Executing task at: " + new Date());
-            scheduler.fixedRateSch();
-            // Your task logic goes here
-        }, schedulerDto.getCronExpression());
+        taskSchedulingService.scheduleATask(schedulerDto.getActionType(),
+            taskSchedulingService.createRunnableForJob(schedulerDto.getActionType())
+        , schedulerDto.getCronExpression());
     }
 
     @PostMapping(path = "/taskdef2", consumes = "application/json")
@@ -61,36 +62,4 @@ public class ScheduleController {
 //        scheduler.cancelTask();
     }
 
-
-//    @Autowired
-//    private DynamicSchedulerService schedulerService;
-//
-//    private ScheduledFuture<?> scheduledFuture;
-//
-//    // Initial Cron expression
-//    private String cronExpression = "*/5 * * * * ?"; // Run every 5 minutes
-//
-//    // Schedule task with initial Cron expression
-//    @Scheduled(cron = "#{@dynamicSchedulerService.getCronExpression()}")
-//    public void scheduledTask() {
-//        // Your scheduled task logic here
-//        System.out.println("Scheduled task is running...");
-//    }
-//
-//    // Get current Cron expression
-//    @GetMapping("/cron")
-//    public String getCronExpression() {
-//        return cronExpression;
-//    }
-//
-//    // Change Cron expression dynamically
-//    @GetMapping("/cron/change/{newCron}")
-//    public String changeCronExpression(@PathVariable String newCron) {
-//        cronExpression = newCron;
-//        if (scheduledFuture != null) {
-//            scheduledFuture.cancel(false); // Cancel the current task
-//        }
-//        scheduledFuture = schedulerService.scheduleTask(new CronTrigger(cronExpression)); // Reschedule task with new Cron expression
-//        return "Cron expression changed to: " + newCron;
-//    }
 }

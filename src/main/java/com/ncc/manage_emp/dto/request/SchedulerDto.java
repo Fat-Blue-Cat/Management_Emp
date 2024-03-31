@@ -12,6 +12,5 @@ import lombok.ToString;
 public class SchedulerDto {
         private String cronExpression;
         private String actionType;
-        private String data;
 
 }

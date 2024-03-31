@@ -6,14 +6,14 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class JwtTokenProvider {
@@ -24,10 +24,11 @@ public class JwtTokenProvider {
     @Value("${app.jwt-secret}")
     private String jwtSecret;
 
-    @Value("${app-jwt-expiration-milliseconds}")
+    @Value("${app.app-jwt-expiration-milliseconds}")
     private long jwtExpirationDate;
 
-    @Value("${app-jwt-renewal-milliseconds}")
+
+    @Value("${app.app-jwt-renewal-milliseconds}")
     private long jwtRenewalDate;
 
     // generate JWT token

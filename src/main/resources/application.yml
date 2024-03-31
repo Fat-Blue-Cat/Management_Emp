@@ -1,0 +1,25 @@
+
+
+my:
+  property:
+    name: "Hello, world!"
+
+
+spring:
+  profiles:
+    include: common, local,ex
+
+
+#CONFIG FOR EXAMPLE SCOPE
+
+
+server:
+  session:
+    timeout: '1'
+    cookie:
+      max-age: '1'
+
+#config schedule:
+#scheduler.df.cron = */2 * * * * *
+
+#cron.expression=*/5 * * * * ?

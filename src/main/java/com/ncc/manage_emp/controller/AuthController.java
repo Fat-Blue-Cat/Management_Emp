@@ -9,6 +9,8 @@ import com.ncc.manage_emp.response.ResponseData;
 import com.ncc.manage_emp.service.AuthService;
 import com.ncc.manage_emp.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,25 +26,28 @@ import reactor.core.publisher.Flux;
 import java.util.*;
 
 
-@AllArgsConstructor
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/auth")
 public class AuthController {
+    // Example Constructor Injection
+    private final AuthService authService;
 
-    private AuthService authService;
+    private final UserService userService;
 
-    private UserService userService;
-
+    @Autowired
+    public AuthController(AuthService authService, UserService userService) {
+        this.authService = authService;
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
         ResponseData responseData = new ResponseData();
 
         try {
-//            String token = authService.login(loginDto);
             JWTAuthDto jwtAuthDto = authService.login(loginDto);
-//            JWTAuthDto jwtAuthDto = new JWTAuthDto();
-//            jwtAuthDto.setAccessToken(token);
+
             responseData.setData(jwtAuthDto);
         }catch (Exception e){
             responseData.setStatus(400);
@@ -60,9 +65,7 @@ public class AuthController {
         ResponseData responseData = new ResponseData();
         try {
             JWTAuthDto jwtAuthDto = authService.signUp(signupDto);
-//            String refreshToken = authService.
-//            JWTAuthDto jwtAuthDto = new JWTAuthDto();
-//            jwtAuthDto.setAccessToken(token);
+
             responseData.setData(jwtAuthDto);
             return new ResponseEntity<>(responseData,HttpStatus.OK);
         } catch (Exception e) {
@@ -74,37 +77,10 @@ public class AuthController {
         }
     }
 
-
-
-
-
-
     @GetMapping("/logout")
     public String logout() {
         SecurityContextHolder.clearContext();
         return "logoutsucess";
-    }
-
-
-
-    @GetMapping("/sigingoogle1")
-    public ResponseEntity<?> loginWithGoogle(OAuth2AuthenticationToken oAuth2AuthenticationToken){
-        ResponseData responseData = new ResponseData();
-        System.out.println(oAuth2AuthenticationToken);
-
-        try {
-//            String token = authService.loginWithGoogle(oAuth2AuthenticationToken);
-//            JWTAuthDto jwtAuthDto = new JWTAuthDto();
-//            jwtAuthDto.setAccessToken(token);
-//            responseData.setData(token);
-        }catch (Exception e){
-            responseData.setStatus(400);
-            responseData.setDesc(e.getMessage());
-            responseData.setSuccess(false);
-            responseData.setData(null);
-        }
-
-        return new ResponseEntity<>(responseData,HttpStatus.OK);
     }
 
 
@@ -117,12 +93,9 @@ public class AuthController {
     @GetMapping("/signingoogle")
     public ResponseEntity<?> login1(@AuthenticationPrincipal OAuth2User principal){
         ResponseData responseData = new ResponseData();
-//        System.out.println(oAuth2AuthenticationToken);
 
         try {
             JWTAuthDto jwtAuthDto = authService.loginWithGoogle(principal);
-//            JWTAuthDto jwtAuthDto = new JWTAuthDto();
-//            jwtAuthDto.setAccessToken(token);
             responseData.setData(jwtAuthDto);
         }catch (Exception e){
             responseData.setStatus(400);
@@ -193,8 +166,7 @@ public class AuthController {
                 .retrieve()
                 .bodyToFlux(Object.class);
 
-//        tweetFlux.subscribe(tweet -> log.info(tweet.toString()));
-//        log.info("Exiting NON-BLOCKING Controller!");
+
         return tweetFlux;
     }
 

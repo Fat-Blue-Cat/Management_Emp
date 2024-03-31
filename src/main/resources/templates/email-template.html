@@ -4,17 +4,17 @@
     <title>Email Template</title>
 </head>
 <body>
-<h1>Bạn đã được cấp tài khoản!</h1>
-<p >Chào mừng <span th:text="${user_data.get().getName()}"></span> đến với NCC</p>
+<h1>You have been granted an account!</h1>
+<p >Welcome <span th:text="${user_data.get().getName()}"></span> to NCC</p>
 
 <p>
-    Gio làm việc của bạn bắt đầu từ:
-    <span th:text="${work_time.getCheckinWork()}">Default message</span> Đến
+    Your working time is from:
+    <span th:text="${work_time.getCheckinWork()}">Default message</span> to
     <span th:text="${work_time.getCheckoutWork()}">Default message</span>
 </p>
 <p>
-    <span> Mã check in của bạn là: </span>
-    <span th:text="${work_time.getCheckinCode()}">Default message</span>
+    <span> Your CheckIn code: </span>
+    <span th:text="${user_data.get().getCheckinCode()}">Default message</span>
 </p>
 
 

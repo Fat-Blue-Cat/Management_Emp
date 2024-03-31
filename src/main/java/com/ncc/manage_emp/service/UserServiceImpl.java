@@ -4,22 +4,18 @@ import com.ncc.manage_emp.dto.UserDto;
 import com.ncc.manage_emp.entity.TimeLogs;
 import com.ncc.manage_emp.entity.Users;
 import com.ncc.manage_emp.entity.WorkTime;
-import com.ncc.manage_emp.repository.TimeLogRepository;
-import com.ncc.manage_emp.repository.UserRepository;
-import com.ncc.manage_emp.repository.WorkTimeRepository;
+import com.ncc.manage_emp.mapper.TimeLogMapperWithMapStruct;
+import com.ncc.manage_emp.mapper.UserMapperWithMapstruct;
+import com.ncc.manage_emp.repository.*;
+import com.ncc.manage_emp.response.TimeLogsResponseDto;
 import com.ncc.manage_emp.util.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,49 +24,62 @@ import java.util.Optional;
 @NoArgsConstructor
 public class UserServiceImpl implements UserService{
 
+    @Autowired
+    private UserMapperWithMapstruct userMapperWithMapstruct;
 
-@Autowired
+    @Autowired
+    private TimeLogMapperWithMapStruct timeLogMapperWithMapStruct;
+
+
+    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-
     private UserRepository userRepository;
     @Autowired
-
     private TimeLogRepository timeLogRepository;
 
     @Autowired
     private WorkTimeRepository workTimeRepository;
+
+
+
     @Override
     public UserDto findUserByJwt(String jwt) {
         String userName = jwtTokenProvider.getUsername(jwt.substring(7));
-
+//        ============== DEMO Spring Mapstruct ==========================
         Optional<Users> user = userRepository.findByUserNameOrEmail(userName,userName);
-
-        UserDto userDto = new UserDto();
-        userDto.setUserName(user.get().getUserName());
-        userDto.setRole(user.get().getRoleName());
-        userDto.setEmail(user.get().getEmail());
+        UserDto userDto = userMapperWithMapstruct.userToUserDto(user.get());
+//        Users users = userMapperWithMapstruct.userDtoToUser(userDto);
+//        System.out.println(users);
         return userDto;
     }
 
-    @Override
-    public List<WorkTime> getAllTimeLogByUserId(Long userID, LocalDateTime dateFilter) {
 
-        if(dateFilter == null) return timeLogRepository.findAllTimeLogByUserId(userID, LocalDateTime.now());
-        return timeLogRepository.findAllTimeLogByUserId(userID,dateFilter );
+    @Override
+    public  List<TimeLogsResponseDto> getAllTimeLogByUserId(Long userID, LocalDate startDate, LocalDate endDate) {
+        Users user = timeLogRepository.findAllTimeLogByUserId(userID,startDate,endDate );
+        List<TimeLogs> logsList = user.getTimeLogsList();
+        List<TimeLogsResponseDto> timeLogsResponseDto = timeLogMapperWithMapStruct.timeLogToTimeLogResponseDto(logsList);
+//        if(dateFilter == null) return timeLogRepository.findAllTimeLogByUserId(userID, LocalDate.now());
+        return timeLogsResponseDto;
     }
 
     @Override
     public boolean checkInTime(String checkInCode, Long userId) {
-        WorkTime workTime = workTimeRepository.findLastVersioning(userId);
+//        WorkTime workTime = workTimeRepository.findLastVersioning(userId);
+        Optional<Users> users = userRepository.findById(userId);
+        WorkTime workTime = workTimeRepository.findWorkTimeByUsersIdAndIsPrimaryWorkingTrue(userId);
         TimeLogs timeLogCheck = timeLogRepository.findTimeLogsByCheckDate(userId,LocalDate.now());
 //        if(timeLogCheck!=null) return false;
-        if(workTime.getCheckinCode().equals(checkInCode)){
+        if(users.get().getCheckinCode().equals(checkInCode)){
             if(timeLogCheck !=null) {
-                timeLogCheck.setCheckinTime(LocalTime.now());
-                timeLogRepository.save(timeLogCheck);
-                return true;
+                if(timeLogCheck.getCheckinTime() != null){
+//                    timeLogCheck.setCheckinTime(LocalTime.now());
+//                    timeLogRepository.save(timeLogCheck);
+                    return false;
+                }
+
             }
             TimeLogs timeLogs = new TimeLogs();
             LocalTime currenTime = LocalTime.now();
@@ -80,7 +89,7 @@ public class UserServiceImpl implements UserService{
             timeLogs.setCheckinTime(currenTime);
             timeLogs.setCheckoutTime(null);
             timeLogs.setCheckDate(LocalDate.now());
-            timeLogs.setWorkTime(workTime);
+            timeLogs.setUsers(users.get());
             timeLogRepository.save(timeLogs);
             return true;
         }
@@ -89,12 +98,16 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean checkOutTime(String checkOutCode, Long userId) {
-        WorkTime workTime = workTimeRepository.findLastVersioning(userId);
-        TimeLogs timeLogs = timeLogRepository.findTimeLogsByCheckDate(userId,LocalDate.now());
+//        WorkTime workTime = workTimeRepository.findLastVersioning(userId);
+//        TimeLogs timeLogs = timeLogRepository.findTimeLogsByCheckDate(userId,LocalDate.now());
 
-        if (timeLogs != null && checkOutCode.equals(workTime.getCheckinCode())) {
-            timeLogs.setCheckoutTime(LocalTime.now());
-            timeLogRepository.save(timeLogs);
+        Optional<Users> users = userRepository.findById(userId);
+        WorkTime workTime = workTimeRepository.findWorkTimeByUsersIdAndIsPrimaryWorkingTrue(userId);
+        TimeLogs timeLogCheck = timeLogRepository.findTimeLogsByCheckDate(userId,LocalDate.now());
+
+        if (timeLogCheck != null && checkOutCode.equals(users.get().getCheckinCode())) {
+            timeLogCheck.setCheckoutTime(LocalTime.now());
+            timeLogRepository.save(timeLogCheck);
             return true;
         }
 
@@ -111,7 +124,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<WorkTime> getAllTimeLogFailByMonth(Long userID, LocalDate dateFilter) {
+    public List<TimeLogs> getAllTimeLogFailByMonth(Long userID, LocalDate dateFilter) {
         return timeLogRepository.getTimeLogFail(userID,dateFilter);
     }
 }

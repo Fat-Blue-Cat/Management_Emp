@@ -1,7 +1,9 @@
 package com.ncc.manage_emp.service;
 
+import jakarta.mail.SendFailedException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -42,9 +44,14 @@ public class EmailServiceImpl implements EmailService{
             String htmlContent = templateEngine.process(templateName, context);
             helper.setText(htmlContent, true);
             mailSender.send(mimeMessage);
+        } catch (MailSendException e) {
+
         } catch (MessagingException e) {
-            // Handle exception
+            System.out.println("Nothing!");
+
+            // Xử lý ngoại lệ gửi mail
         }
+
     }
 
 }

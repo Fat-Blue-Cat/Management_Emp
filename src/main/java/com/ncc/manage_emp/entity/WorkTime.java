@@ -5,9 +5,11 @@
     import lombok.*;
 
 
+    import java.io.Serializable;
     import java.time.LocalDate;
     import java.time.LocalDateTime;
     import java.time.LocalTime;
+    import java.util.ArrayList;
     import java.util.Date;
     import java.util.List;
 
@@ -16,34 +18,38 @@
     @NoArgsConstructor
     @AllArgsConstructor
     @Entity
-    @Getter
-    @Setter
+    @Data
     @Table(name = "work_time")
-    public class WorkTime {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id")
-        private Long id;
+    public class WorkTime implements Serializable {
+            @Id
+            @GeneratedValue(strategy = GenerationType.IDENTITY)
+            @Column(name = "id")
+            private Long id;
+//
+//            @Column(name = "checkin_type")
+//            private Boolean checkinType;
 
-        @Column(name = "checkin_code")
-        private String checkinCode;
+            @Column(name = "checkin_work")
+            private LocalTime checkinWork;
 
-        @Column(name = "checkin_work")
-        private LocalTime checkinWork;
+            @Column(name = "checkout_work")
+            private LocalTime checkoutWork;
 
-        @Column(name = "checkout_work")
-        private LocalTime checkoutWork;
+            @Column(name = "is_primary_working")
+            private Boolean isPrimaryWorking;
 
-        @Column(name = "version")
-        private Long version;
+            @Column(name = "create_at")
+            private Date createAt;
 
 
-        @ManyToOne
-        @JoinColumn(name = "user_id")
-        @JsonIgnore
-        private Users users;
 
-        @OneToMany(mappedBy = "workTime", cascade = CascadeType.ALL)
-        private List<TimeLogs> timeLogsList;
+            @ToString.Exclude
+            @EqualsAndHashCode.Exclude
+            @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+            @JoinColumn(name = "user_id")
+            @JsonIgnore
+            private Users users;
+            
 
     }
