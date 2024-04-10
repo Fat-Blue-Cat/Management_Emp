@@ -64,7 +64,6 @@ public class UserServiceImpl implements UserService {
         Optional<Users> user = userRepository.findByUserNameOrEmail(userName,userName);
         UserDto userDto = userMapperWithMapstruct.userToUserDto(user.get());
 //        Users users = userMapperWithMapstruct.userDtoToUser(userDto);
-//        System.out.println(users);
         return userDto;
     }
 
