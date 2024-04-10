@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
             List<TimeLogsResponseDto> timeLogsResponseDto = timeLogMapperWithMapStruct.listTimeLogToListTimeLogResponseDto(sublist);
             return new PageImpl<>(timeLogsResponseDto, pageable, logsList.size());
         }
-        System.out.println("NOOÀI=======");
+
         return null;
     }
     @Override
