@@ -1,6 +1,8 @@
 package com.ncc.manage_emp.repository;
 
 import com.ncc.manage_emp.entity.WorkTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,49 +15,15 @@ import java.util.List;
 
 @Repository
 public interface WorkTimeRepository extends JpaRepository<WorkTime,Long> {
-
     Boolean existsByUsersId(Long id);
-
-//    @Modifying
-//    @Query("DELETE FROM WorkTime w WHERE w.id = :id")
-//    void deleteById(Long id);
-
     List<WorkTime> findAllByUsersId(Long userId);
-
-
-
-//    @Query("SELECT w FROM WorkTime w WHERE w.users.id = :userid ORDER BY w.version DESC LIMIT 1")
-//    WorkTime findLastVersioning(@Param("userid") Long userid);
-
-//    @Query("SELECT w.users.id AS userId, MAX(w.version) AS maxVersion , w.id as id " +
-//            "FROM WorkTime w " +
-//            "WHERE NOT EXISTS (" +
-//            "    SELECT 1 " +
-//            "    FROM WorkTime w2 " +
-//            "    WHERE w2.users.id = w.users.id " +
-//            "    AND w2.version > w.version" +
-//            ") " +
-//            "GROUP BY w.users.id, w.id")
-//    List<Object[]> findMaxVersionForEachUser();
-
     WorkTime findWorkTimeByUsersIdAndIsPrimaryWorkingTrue(Long userId);
-
-
-
-
-//    @Query("SELECT w " +
-//            "FROM WorkTime w " +
-//            "WHERE NOT EXISTS (" +
-//            "    SELECT 1 " +
-//            "    FROM WorkTime w2 " +
-//            "    WHERE w2.users.id = w.users.id " +
-//            "    AND w2.version > w.version" +
-//            ") " +
-//            "GROUP BY w.users.id")
-//    List<Object[]> findMaxVersionForEachUser();
-
-
-
-
+    WorkTime findWorkTimeByUsersId(Long userId);
+    @Query("SELECT wt FROM WorkTime wt WHERE wt.users.name LIKE %:name%")
+    Page<WorkTime> findAll(Pageable pageable, String name);
+    Page<WorkTime> findWorkTimeByUsersId(Long userId, Pageable pageable);
+    @Modifying
+    @Query("DELETE FROM WorkTime wt WHERE wt.id = :id")
+    void deleteWorkTimeById(@Param("id") Long id);
 
 }

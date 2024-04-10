@@ -1,17 +1,25 @@
 
-
 my:
   property:
     name: "Hello, world!"
 
+#CONFIG trong DEV
 
 spring:
   profiles:
-    include: common, local,ex
+    include: common, ex,local
+#    include: common, local,ex
+  jpa:
+    properties:
+      hibernate:
+        format_sql: 'true'
+    show-sql: 'true'
+
+  main:
+    allow-bean-definition-overriding: 'true'
 
 
 #CONFIG FOR EXAMPLE SCOPE
-
 
 server:
   session:
@@ -19,7 +27,17 @@ server:
     cookie:
       max-age: '1'
 
-#config schedule:
-#scheduler.df.cron = */2 * * * * *
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#        type:
+#          descriptor:
+#            sql:
+#              BasicBinder: TRACE
 
-#cron.expression=*/5 * * * * ?
+
+#
+
+

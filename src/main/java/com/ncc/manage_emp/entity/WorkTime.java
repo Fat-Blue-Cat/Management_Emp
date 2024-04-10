@@ -18,6 +18,7 @@
     @NoArgsConstructor
     @AllArgsConstructor
     @Entity
+    @Builder
     @Data
     @Table(name = "work_time")
     public class WorkTime implements Serializable {
@@ -25,23 +26,14 @@
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             @Column(name = "id")
             private Long id;
-//
-//            @Column(name = "checkin_type")
-//            private Boolean checkinType;
-
             @Column(name = "checkin_work")
             private LocalTime checkinWork;
-
             @Column(name = "checkout_work")
             private LocalTime checkoutWork;
-
             @Column(name = "is_primary_working")
             private Boolean isPrimaryWorking;
-
             @Column(name = "create_at")
             private Date createAt;
-
-
 
             @ToString.Exclude
             @EqualsAndHashCode.Exclude

@@ -19,5 +19,4 @@ public class WorkTimeDto {
     private LocalTime checkOutWork;
     private Boolean isPrimaryWorking;
     private Long userId;
-//    private String version;
 }

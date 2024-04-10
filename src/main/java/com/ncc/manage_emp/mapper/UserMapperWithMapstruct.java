@@ -12,6 +12,7 @@ public interface UserMapperWithMapstruct {
     @Mapping(target = "userName", source = "users.userName")
     @Mapping(target = "email", source = "users.email")
     @Mapping(target = "role", source = "users.roleName")
+    @Mapping(target = "name", source = "users.name")
     UserDto userToUserDto(Users users);
 
 
@@ -19,6 +20,8 @@ public interface UserMapperWithMapstruct {
     @Mapping(target = "email", source = "userDto.email")
     @Mapping(target = "roleName", source = "userDto.role")
     Users userDtoToUser(UserDto userDto);
+
+
 
     UserResponseDto userToUserResponseDto(Users users);
 

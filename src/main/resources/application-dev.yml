@@ -1,9 +1,24 @@
 
 
+# 1. application-dev.yml
 my:
   property:
-#    name: ${username}
-      name: "kk"
+    name: ${testname}
+#      name: "kk"
 
-
+spring:
+  #  config:
+  #    activate:
+  #      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${username}
+    url: jdbc:mysql:${hostname}:${port}/manage_emp
+    password: ${password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+server:
+  port: '${serverPort}'
 #

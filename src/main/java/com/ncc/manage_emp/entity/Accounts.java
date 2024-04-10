@@ -9,16 +9,13 @@ import lombok.Data;
 @Table(name = "accounts")
 public class Accounts {
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @JsonIgnore
     @Column(nullable = false,name = "first_name")
     private String firstName;
-
     @Column(nullable = false, name = "last_name")
     private String lastName;
-
     @Column(nullable = false,name = "email")
     private String email;
 }

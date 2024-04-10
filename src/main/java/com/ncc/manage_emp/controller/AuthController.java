@@ -1,36 +1,34 @@
 package com.ncc.manage_emp.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ncc.manage_emp.dto.JWTAuthDto;
 
 import com.ncc.manage_emp.dto.request.LoginDto;
 import com.ncc.manage_emp.dto.request.SignupDto;
 import com.ncc.manage_emp.dto.UserDto;
+import com.ncc.manage_emp.entity.MockData;
 import com.ncc.manage_emp.response.ResponseData;
 import com.ncc.manage_emp.service.AuthService;
 import com.ncc.manage_emp.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.io.File;
 import java.util.*;
 
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/auth")
 public class AuthController {
-    // Example Constructor Injection
+    // EXAMPLE CONSTRUCTOR-BASED INJECTION
     private final AuthService authService;
 
     private final UserService userService;
@@ -42,20 +40,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         ResponseData responseData = new ResponseData();
-
-        try {
             JWTAuthDto jwtAuthDto = authService.login(loginDto);
-
             responseData.setData(jwtAuthDto);
-        }catch (Exception e){
-            responseData.setStatus(400);
-            responseData.setDesc(e.getMessage());
-            responseData.setSuccess(false);
-            responseData.setData(null);
-        }
-
         return new ResponseEntity<>(responseData,HttpStatus.OK);
     }
 
@@ -65,7 +53,6 @@ public class AuthController {
         ResponseData responseData = new ResponseData();
         try {
             JWTAuthDto jwtAuthDto = authService.signUp(signupDto);
-
             responseData.setData(jwtAuthDto);
             return new ResponseEntity<>(responseData,HttpStatus.OK);
         } catch (Exception e) {
@@ -103,15 +90,12 @@ public class AuthController {
             responseData.setSuccess(false);
             responseData.setData(null);
         }
-
         return new ResponseEntity<>(responseData,HttpStatus.OK);
     }
 
     @PostMapping("/refreshtoken")
     ResponseEntity<?> refreshToken(@RequestParam String token){
         ResponseData responseData = new ResponseData();
-        System.out.println(token);
-
         try {
             JWTAuthDto jwtAuthDto = authService.refreshToken(token);
             responseData.setData(jwtAuthDto);
@@ -121,7 +105,6 @@ public class AuthController {
             responseData.setSuccess(false);
             responseData.setData(null);
         }
-
         return new ResponseEntity<>(responseData,HttpStatus.OK);
 
     }
@@ -134,20 +117,33 @@ public class AuthController {
         return new ResponseEntity<UserDto>(user, HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/mockdata")
+    public MockData getUserData() {
+        try {
+            // Đọc dữ liệu từ file JSON vào đối tượng UserData
+            ObjectMapper objectMapper = new ObjectMapper();
+            MockData mockData = objectMapper.readValue(new File("src/main/resources/data.json"), MockData.class);
+            return mockData;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @GetMapping("/say-hello1")
-    private List<Object> getHello1(){
-        String uri = "https://jsonplaceholder.typicode.com/todos";
+    private ResponseEntity<?> getHello1(){
+        String uri = "http://localhost:8080/api/auth/mockdata";
         RestTemplate restTemplate = new RestTemplate();
-        Object[] data = restTemplate.getForObject(uri,Object[].class);
+        MockData data = restTemplate.getForObject(uri,MockData.class);
 //        String result = "Gello";
 //        return data;
-        return Arrays.asList(data);
+        return new ResponseEntity<>(data.getResult(),HttpStatus.OK);
     }
 
     @GetMapping("/say-hello")
     @ResponseBody
     private Flux<Object> getHello() {
-        String uri = "https://stg-api-hrmv2.nccsoft.vn/api/services/app/CheckIn/GetUserForCheckIn";
+        String uri = "http://localhost:8080/api/auth/mockdata";
         WebClient client = WebClient.create();
 
         return client.get()

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 
-// class check authentication of api
+// CLASS TO HANDLE UNAUTHORIZED REQUESTS
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
 

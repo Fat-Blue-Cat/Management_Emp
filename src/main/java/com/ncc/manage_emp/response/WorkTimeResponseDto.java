@@ -11,19 +11,13 @@ import java.time.LocalTime;
 import java.util.Date;
 
 @Data
-
 public class WorkTimeResponseDto {
-
+    private String name;
+    private Long userId;
     private Long id;
-
-//    private Boolean checkinType;
-
     private LocalTime checkinWork;
-
     private LocalTime checkoutWork;
-
     private Boolean isPrimaryWorking;
-
     private Date createAt;
 //    private UserResponseDto users;
 }

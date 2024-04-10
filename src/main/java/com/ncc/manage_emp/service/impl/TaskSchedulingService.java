@@ -1,7 +1,8 @@
-package com.ncc.manage_emp.service;
+package com.ncc.manage_emp.service.impl;
 
 import com.ncc.manage_emp.entity.Schedule;
 import com.ncc.manage_emp.repository.ScheduleRepository;
+import com.ncc.manage_emp.service.AdminService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
@@ -93,8 +94,10 @@ public class TaskSchedulingService {
 
     public Runnable createRunnableForJob(String jobId) {
 
+
         if (jobId.equals("FORGET_CHECKIN")) {
             return () -> adminService.notifyForgetCheckIn();
+
         }
         if (jobId.equals("FORGET_CHECKOUT")) {
             return () -> adminService.notifyForgetCheckOut();

@@ -12,6 +12,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Entity
 @Data
+@Builder
 @Table(name = "timelogs")
 public class TimeLogs implements Serializable {
     @Id

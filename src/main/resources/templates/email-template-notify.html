@@ -1,22 +1,15 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Email Template</title>
+    <title>Email Template Notify forget checkin And checkout</title>
 
 </head>
 <body>
-    <meta charset="UTF-8">
-    <h1>Looks like you haven't  <span th:text="${type_mail}"></span> in yet?</h1>
-    <p ><span th:text="${type_mail}"></span> now!  <span th:text="${user_data.getName()}"></span>  <33 </p>
+<meta charset="UTF-8">
+<h1> <span th:text="${message1}"> </span> <span th:text="${type_mail}"></span> <span th:text="${message2}"></span></h1>
+<p ><span th:text="${type_mail}"></span> <span th:text="${message3}"> </span>  <span th:text="${user_data.getName()}"></span>  <33 </p>
 
-    <!--    <p>-->
-    <!--        Gio làm việc của bạn bắt đầu từ:-->
-    <!--        <span th:text="${work_time.getCheckinWork()}">Default message</span> Đến-->
-    <!--        <span th:text="${work_time.getCheckoutWork()}">Default message</span>-->
-    <!--    </p>-->
-    <!--    <p>-->
-    <!--        <span> Mã check in của bạn là: </span>-->
-    <!--        <span th:text="${work_time.getCheckinCode()}">Default message</span>-->
-    <!--    </p>-->
 </body>
 </html>

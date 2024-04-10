@@ -12,8 +12,11 @@ import java.util.*;
 @AllArgsConstructor
 @Data
 @Entity
+@Builder
 @Table(name = "users")
 public class Users implements Serializable {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

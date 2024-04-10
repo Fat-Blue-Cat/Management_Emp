@@ -1,5 +1,6 @@
 package com.ncc.manage_emp.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data

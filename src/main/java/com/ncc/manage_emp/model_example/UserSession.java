@@ -1,4 +1,4 @@
-package com.ncc.manage_emp.modal_example;
+package com.ncc.manage_emp.model_example;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -20,12 +20,10 @@ public class UserSession {
     public void postConstruct(){
         System.out.println("\t>>After initialization, the UserSession object will run this function");
     }
-
     @PreDestroy
     public void preDestroy(){
         System.out.println("\t>> Before destroy, the UserSession object will run this function");
     }
-
     private String username;
     private boolean isLoggedIn;
 

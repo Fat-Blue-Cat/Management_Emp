@@ -1,32 +1,26 @@
 package com.ncc.manage_emp.controller;
 
 import com.ncc.manage_emp.dto.request.SchedulerDto;
+import com.ncc.manage_emp.response.ResponseData;
 import com.ncc.manage_emp.service.AdminService;
-import com.ncc.manage_emp.service.TaskSchedulingService;
+import com.ncc.manage_emp.service.impl.TaskSchedulingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.concurrent.ScheduledFuture;
 
 @RestController
 @RequestMapping("/api/schedule")
 public class ScheduleController {
-
+    //EXAMPLE FIELD-BASED INJECTION
     @Autowired
     private TaskSchedulingService taskSchedulingService;
-
-
-
     @Autowired
     private AdminService adminService;
 
 
     @PostMapping(path = "/taskdef", consumes = "application/json")
     public void scheduleATask(@RequestBody SchedulerDto schedulerDto) {
-
         System.out.println("Scheduling a task...");
         taskSchedulingService.scheduleATask(schedulerDto.getActionType(),
             taskSchedulingService.createRunnableForJob(schedulerDto.getActionType())
@@ -37,9 +31,6 @@ public class ScheduleController {
     public void scheduleATask2(@RequestBody SchedulerDto schedulerDto) {
         System.out.println("Scheduling a task...");
         taskSchedulingService.scheduleATask(schedulerDto.getActionType(), () -> {
-//            System.out.println("Executing task at: " + new Date());
-            System.out.println("HIHIHIH");
-            // Your task logic goes here
         }, schedulerDto.getCronExpression());
     }
 
@@ -60,6 +51,20 @@ public class ScheduleController {
 //        scheduler.setDefaultCronExpression(schedulerDto.getCronExpression());
 //        scheduler.fixedRateSch();
 //        scheduler.cancelTask();
+    }
+
+
+    @GetMapping("/")
+    public ResponseEntity<?> schedule() {
+        ResponseData responseData = new ResponseData();
+        try{
+            responseData.setData(adminService.getAllScheduler());
+        }catch (Exception e){
+            responseData.setStatus(400);
+            responseData.setDesc(e.getMessage());
+            responseData.setSuccess(false);
+        }
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
 }

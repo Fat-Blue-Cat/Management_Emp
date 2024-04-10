@@ -1,7 +1,11 @@
 package com.ncc.manage_emp.repository;
 
+import com.ncc.manage_emp.entity.TimeLogs;
 import com.ncc.manage_emp.entity.Users;
-import org.springframework.cglib.core.Local;
+import com.ncc.manage_emp.model_custom_results.closed_projections.UserView;
+import com.ncc.manage_emp.model_custom_results.open_projections.UserViewOpen;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,63 +19,25 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<Users,Long> {
     Optional<Users> findByUserName(String username);
-
-
     Boolean existsByEmail(String email);
-
     Optional<Users> findByUserNameOrEmail(String username, String email);
-
     boolean existsByUserName(String username);
-
-    @Query("SELECT distinct u FROM Users  u where u.id = :id")
     Users getUserById(Long id);
 
     @Query("SELECT u FROM Users u WHERE u.name LIKE %:name%")
-    List<Users> findByName(@Param("name") String name,Sort sort);
+    Page<Users> findByName(@Param("name") String name, Pageable pageable);
 
-    // Sử dụng FetchType.EAGER với JOIN FETCH
-    @Query("SELECT DISTINCT u FROM Users u LEFT JOIN FETCH u.workTimeList")
-    List<Users> findAllEager();
+    @Query("SELECT tl FROM TimeLogs tl " +
+            "WHERE (tl.checkDate BETWEEN :startDate AND :endDate) AND  tl.users.name LIKE %:name%")
+    Page<TimeLogs> getAllUserByTimeCheckin(LocalDate startDate, LocalDate endDate, Pageable pageable, String name);
 
-
-
-//    @Query("SELECT  new com.ncc.manage_emp.dto.UserDto(u.userName, u.email, u.roleName) FROM Users u JOIN u.workTimeList w JOIN w.timeLogsList tl WHERE  w.id = tl.workTime.id AND tl.checkDate = :checkDate")
-//    List<UserDto> getAllUserByTimeCheckin(@Param("checkDate") LocalDate localDate);
-
-//    @Query(value = "SELECT * FROM users u " +
-//            "JOIN work_time w ON u.id = w.user_id " +
-//            "JOIN timelogs tl ON w.id = tl.work_time_id " +
-//            "WHERE tl.check_date = :checkDate", nativeQuery = true)
-//    List<Users> getAllUserByTimeCheckin(@Param("checkDate") LocalDate checkDate);
-
-//    @Query(value = "SELECT c.* " +
-////            "FROM users u " +
-////            "LEFT JOIN  work_time w ON u.id = w.user_id " +
-////            "LEFT JOIN timelogs tl ON w.id = tl.work_time_id " +
-////            " WHERE tl.check_date = :checkDate", nativeQuery = true)
-////    public List<Users> getAllUserByTimeCheckin(LocalDate checkDate);
-
-//    @Query(value = "SELECT w " +
-//            "FROM TimeLogs tl " +
-//            "JOIN FETCH tl.workTime w JOIN FETCH w.users u WHERE tl.checkDate = :checkDate")
-//    public List<Object[]> getAllUserByTimeCheckin(LocalDate checkDate);
-
-
-//    public List<Object[]> getAllUserByTimeCheckin( LocalDate checkDate);
-
-//    List<Object> findByWorkTimeListTimeLogsListCheckDate(LocalDate checkDate);
-
-    @Query("SELECT u FROM Users u " +
-            "JOIN u.timeLogsList tl "+
-            "WHERE tl.checkDate BETWEEN :startDate AND :endDate")
-    List<Users> getAllUserByTimeCheckin(LocalDate startDate, LocalDate endDate);
-
-
-    @Query("SELECT u FROM Users u LEFT JOIN FETCH u.timeLogsList tl " +
-            "WHERE tl.checkinType = false " +
-            "AND month(tl.checkDate) = month(:checkDate)")
-    List<Users> getAllTimeLogFailAllUser(LocalDate checkDate);
-
+    @Query("SELECT tl FROM TimeLogs tl " +
+            "WHERE ((:typeCheck = 'ALL') OR " +
+            "      (:typeCheck = 'NON-CHECK' AND tl.checkinTime IS NULL AND tl.checkinType = false) OR " +
+            "      (:typeCheck = 'LATE' AND tl.checkinType = false AND tl.checkinTime IS NOT NULL)) " +
+            "      AND month(tl.checkDate) = month(:checkDate) " +
+            "      AND tl.users.name LIKE %:name%")
+    List<TimeLogs> getAllTimeLogFailAllUser(LocalDate checkDate, String typeCheck, String name);
 
     @Query("SELECT u FROM Users u LEFT JOIN FETCH u.timeLogsList tl " +
             "WHERE tl.checkinTime IS NULL " +
@@ -80,12 +46,17 @@ public interface UserRepository extends JpaRepository<Users,Long> {
 
     @Query("SELECT u FROM Users u " +
             "LEFT JOIN FETCH u.timeLogsList tl " +
-//            "WHERE tl.checkinTime IS NOT NULL " +
             "WHERE tl.checkDate = :checkDate " +
             "AND tl.checkoutTime IS NULL")
     List<Users> getAllUserForgetCheckout(LocalDate checkDate);
 
+    /* ==============EXAMPLE CLOSED PROJECTIONS =====================*/
+    UserView findUsersById(Long userId);
 
-//
+    /* ============== EXAMPLE OPEN PROJECTIONS ================*/
+    UserViewOpen findUsersByName(String name);
+
+    <T> T findUsersByName(String name, Class<T> type);
+
 
 }

@@ -16,14 +16,17 @@ public interface TimeLogMapperWithMapStruct {
     @Mapping(target = "checkinTime", source = "timeLogs.checkinTime")
     @Mapping(target = "checkinType", source = "timeLogs.checkinType")
     @Mapping(target = "checkoutTime", source = "timeLogs.checkoutTime")
-    @Mapping(target = "checkDate", source = "timeLogs.checkDate")
-    List<TimeLogsResponseDto> timeLogToTimeLogResponseDto(List<TimeLogs> timeLogs);
+    @Mapping(target = "checkDate1", source = "timeLogs.checkDate")
+    @Mapping(target = "name", source = "users.name")
+    @Mapping(target = "userId", source = "users.id")
+    TimeLogsResponseDto timeLogToTimeLogResponseDto(TimeLogs timeLogs);
+    List<TimeLogsResponseDto> listTimeLogToListTimeLogResponseDto(List<TimeLogs> timeLogs);
 
 
     @Mapping(target = "checkinTime", source = "timeLogsResponseDto.checkinTime")
     @Mapping(target = "checkinType", source = "timeLogsResponseDto.checkinType")
     @Mapping(target = "checkoutTime", source = "timeLogsResponseDto.checkoutTime")
-    @Mapping(target = "checkDate", source = "timeLogsResponseDto.checkDate")
+    @Mapping(target = "checkDate", source = "timeLogsResponseDto.checkDate1")
     TimeLogs timeLogResponseDtoToTimeLog(TimeLogsResponseDto timeLogsResponseDto);
 
     @Mapping(target = "checkinTime", source = "timeLogDto.checkinTime",dateFormat="dd-MM-yyyy HH:mm:ss")

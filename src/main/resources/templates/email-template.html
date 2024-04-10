@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>You have been granted an account!</h1>
-<p >Welcome <span th:text="${user_data.get().getName()}"></span> to NCC</p>
+<p >Welcome <span th:text="${user_data.getName()}"></span> to NCC</p>
 
 <p>
     Your working time is from:
@@ -14,7 +14,7 @@
 </p>
 <p>
     <span> Your CheckIn code: </span>
-    <span th:text="${user_data.get().getCheckinCode()}">Default message</span>
+    <span th:text="${user_data.getCheckinCode()}">Default message</span>
 </p>
 
 

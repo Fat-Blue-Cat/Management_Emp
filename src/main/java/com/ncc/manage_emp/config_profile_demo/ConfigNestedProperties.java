@@ -12,11 +12,9 @@ import java.util.Map;
 @Configuration
 @Data
 public class ConfigNestedProperties {
-
     private String hostname;
     private int port;
     private String from;
-
     private List<String> defaultRecipients;
     private Map<String, String> additionalHeaders;
     private Credentials credentials;

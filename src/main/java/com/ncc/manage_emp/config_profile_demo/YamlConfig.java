@@ -13,13 +13,10 @@ import java.util.List;
 @ConfigurationProperties
 @Data
 public class YamlConfig {
-
     private String name;
     private String environment;
     private boolean enabled;
     private List<String> servers = new ArrayList<>();
 
-
-// standard getters and setters
 
 }

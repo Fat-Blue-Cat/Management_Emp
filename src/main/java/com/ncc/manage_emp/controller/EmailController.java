@@ -28,7 +28,6 @@ public class EmailController {
     public String sendHtmlEmail(@RequestBody EmailRequest emailRequest) {
         Context context = new Context();
         context.setVariable("message", emailRequest.getBody());
-
         emailService.sendEmailWithHtmlTemplate(emailRequest.getTo(), emailRequest.getSubject(), "email-template", context);
         return "HTML email sent successfully!";
     }

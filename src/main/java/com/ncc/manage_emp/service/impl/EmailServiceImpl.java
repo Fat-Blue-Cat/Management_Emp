@@ -1,12 +1,18 @@
-package com.ncc.manage_emp.service;
+package com.ncc.manage_emp.service.impl;
 
+import com.ncc.manage_emp.entity.Users;
+import com.ncc.manage_emp.entity.WorkTime;
+import com.ncc.manage_emp.event.UpdateRoleEvent;
+import com.ncc.manage_emp.service.EmailService;
 import jakarta.mail.SendFailedException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -14,7 +20,7 @@ import jakarta.mail.MessagingException;
 
 
 @Service
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
@@ -51,6 +57,22 @@ public class EmailServiceImpl implements EmailService{
 
             // Xử lý ngoại lệ gửi mail
         }
+
+    }
+
+//    @Async
+    @EventListener
+    public void sendMailWhenUpdateRole(UpdateRoleEvent updateRoleEvent) throws InterruptedException {
+
+        Users users = updateRoleEvent.getUsers();
+        WorkTime workTime = updateRoleEvent.getWorkTime();
+
+        Context context = new Context();
+        context.setVariable("work_time", workTime);
+        context.setVariable("user_data", users);
+        System.out.println("MAI: GỬI MAIL CHECKIN CODE");
+        sendEmailWithHtmlTemplate(users.getEmail(), "Grant account to Emp", "email-template", context);
+        System.out.println("MAIL: THỰC THI KHI UPDATEROLE ACTIVE");
 
     }
 

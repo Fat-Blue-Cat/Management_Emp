@@ -10,16 +10,12 @@ import java.util.List;
 @ConfigurationProperties(prefix = "application")
 @Data
 public class ConfigListObject {
-
     private List<Object> profiles;
-
     public List<Object> getProfiles() {
         return profiles;
     }
-
     public void setProfiles(List<Object> profiles) {
         this.profiles = profiles;
     }
-// getter and setter
 
 }

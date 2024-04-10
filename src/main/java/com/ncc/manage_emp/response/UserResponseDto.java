@@ -4,25 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ncc.manage_emp.entity.TimeLogs;
 import com.ncc.manage_emp.entity.WorkTime;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.*;
 
-@Data
-
+//@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponseDto {
-
     private Long id;
-
     private String name;
-
     private String email;
-
     private String roleName;
 
-    private List<WorkTimeResponseDto> workTimeList;
-//
-    private List<TimeLogsResponseDto> timeLogsList;
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    private List<WorkTimeResponseDto> workTimeList;
+////
+//    private List<TimeLogsResponseDto> timeLogsList;
 }

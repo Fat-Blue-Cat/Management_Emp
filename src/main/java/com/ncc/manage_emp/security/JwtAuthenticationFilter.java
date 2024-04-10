@@ -32,13 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // apply one
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
     }
 
     // extracts the jwt
-    @Override
+    @Override // apply filter
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
@@ -74,10 +75,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // apply one
         filterChain.doFilter(request, response);
     }
 
+    //  GET JWT TOKEN FROM HTTP REQUEST
     private String getTokenFromRequest(HttpServletRequest request){
-
         String bearerToken = request.getHeader("Authorization");
-
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
             return bearerToken.substring(7, bearerToken.length());
         }
