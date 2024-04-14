@@ -5,6 +5,7 @@ import com.ncc.manage_emp.entity.Schedule;
 import com.ncc.manage_emp.entity.TimeLogs;
 import com.ncc.manage_emp.entity.Users;
 import com.ncc.manage_emp.entity.WorkTime;
+import com.ncc.manage_emp.model_custom_results.CountErrorByMonth;
 import com.ncc.manage_emp.model_custom_results.closed_projections.UserView;
 import com.ncc.manage_emp.model_custom_results.open_projections.UserViewOpen;
 import com.ncc.manage_emp.response.TimeLogsResponseDto;
@@ -51,7 +52,7 @@ public interface AdminService {
     void notifyForgetCheckIn();
     void notifyForgetCheckOut();
 
-    List<Object[]> countErrorByMonth();
+    List<CountErrorByMonth> countErrorByMonth();
 
     UserView findUserByIdWithClosedProjections(Long id);
 

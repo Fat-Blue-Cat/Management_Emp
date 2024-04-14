@@ -89,6 +89,7 @@ public class CascadeTypesTest {
 
         assertNull(entityManager.find(Users.class, u.getId()));
         assertNull(entityManager.find(WorkTime.class, w.getId()));
+
     }
 
     @Test

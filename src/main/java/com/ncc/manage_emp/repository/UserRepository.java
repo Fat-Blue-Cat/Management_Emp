@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 public interface UserRepository extends JpaRepository<Users,Long> {
     Optional<Users> findByUserName(String username);
     Boolean existsByEmail(String email);

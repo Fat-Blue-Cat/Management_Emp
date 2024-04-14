@@ -20,7 +20,7 @@ spring:
           google:
             client-secret: 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
             client-id: 275395417575-9g7dafj80dhbg3ssrpr36eue705215cb.apps.googleusercontent.com
-            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+#            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
 app:
   app-jwt-expiration-milliseconds: '21440000'
   jwt-secret: daf66e01593f61a15b857cf433aae03a005812b31234e149036bcc8dee755dbb

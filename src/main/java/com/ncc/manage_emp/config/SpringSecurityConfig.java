@@ -43,7 +43,7 @@ public class SpringSecurityConfig {
 
     @Bean
     SecurityFilterChain config(HttpSecurity http) throws Exception {
-        http.cors().and()
+        http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/auth/signingoogle","/api/auth/profile").authenticated();
@@ -51,15 +51,11 @@ public class SpringSecurityConfig {
                     authorize.requestMatchers("/api/admin/**","/api/schedule/**","/api/account/**").hasAuthority("ADMIN");
                     authorize.requestMatchers("/api/user/**").hasAnyAuthority("EMPLOYEE","ADMIN");
                     authorize.anyRequest().authenticated();
-                }).oauth2Login(oauth2 -> oauth2.authorizationEndpoint(
-                        endpoint -> endpoint.baseUri("/oauth2/authorize")
-                ).redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/oauth2/callback/*")));
-            http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-//                .oauth2Login(Customizer.withDefaults());
-
-
-
+                }).oauth2Login(Customizer.withDefaults());
+//                .oauth2Login(oauth2 -> oauth2.authorizationEndpoint(
+//                        endpoint -> endpoint.baseUri("/oauth2/authorize")
+//                ).redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/oauth2/callback/*")));
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

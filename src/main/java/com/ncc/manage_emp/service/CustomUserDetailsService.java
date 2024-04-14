@@ -25,7 +25,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println(usernameOrEmail + "________________");
         Optional<Users> user = Optional.ofNullable(userRepository.findByUserNameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email")));
-        System.out.println(user.get().getGoogleId() + "111____________");
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.get().getRoleName()));
 
         if (user.get().getGoogleId() != null) {

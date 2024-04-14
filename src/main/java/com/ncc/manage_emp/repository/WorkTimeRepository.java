@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
+//@Repository
 public interface WorkTimeRepository extends JpaRepository<WorkTime,Long> {
     Boolean existsByUsersId(Long id);
     List<WorkTime> findAllByUsersId(Long userId);

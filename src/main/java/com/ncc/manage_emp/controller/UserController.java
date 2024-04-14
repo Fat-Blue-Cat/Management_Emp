@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 
 @Controller // RETURN VIEW, HTML
-@ResponseBody // RETURN JSON, XML
+@ResponseBody // RETURN JSON, XML5
 //@RestController
 @RequestMapping("/api/user")
 public class UserController {

@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@Repository
+//@Repository
 public interface TimeLogRepository extends JpaRepository<TimeLogs,Long> {
     @Query("SELECT u FROM Users u JOIN u.timeLogsList tl  WHERE tl.users.id = :userId AND tl.checkDate BETWEEN :startDate AND :endDate")
     Users findAllTimeLogByUserId(@Param("userId") Long userId, @Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate);
@@ -45,8 +45,7 @@ public interface TimeLogRepository extends JpaRepository<TimeLogs,Long> {
       /*  ============= CUSTOM CONSTRUCTION ====================*/
     @Query("SELECT NEW com.ncc.manage_emp.model_custom_results.CountErrorByMonth(count(t.checkinType), FUNCTION('MONTH', t.checkDate)) " +
             "FROM TimeLogs t WHERE t.checkinType = false GROUP BY FUNCTION('MONTH', t.checkDate)")
-
-    List<Object[]> countTimeLogsErrorByMonth();
+    List<CountErrorByMonth> countTimeLogsErrorByMonth();
 
     TimeLogs findTimeLogsByUsersIdAndCheckDate(Long id, LocalDate localDate);
 

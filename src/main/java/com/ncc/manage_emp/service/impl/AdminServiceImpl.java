@@ -8,6 +8,7 @@ import com.ncc.manage_emp.mapper.MapperWithModelMapper;
 import com.ncc.manage_emp.mapper.TimeLogMapperWithMapStruct;
 import com.ncc.manage_emp.mapper.UserMapperWithMapstruct;
 import com.ncc.manage_emp.mapper.WorkingTimeMapperWithMapstruct;
+import com.ncc.manage_emp.model_custom_results.CountErrorByMonth;
 import com.ncc.manage_emp.model_custom_results.closed_projections.UserView;
 import com.ncc.manage_emp.model_custom_results.open_projections.UserResponseDtoRecord;
 import com.ncc.manage_emp.model_custom_results.open_projections.UserViewOpen;
@@ -381,7 +382,7 @@ public class AdminServiceImpl implements AdminService {
 
     /*============ DEMO CUSTOM RESULT WITH CONSTRUCTION ================== */
     @Override
-    public List<Object[]> countErrorByMonth() {
+    public List<CountErrorByMonth> countErrorByMonth() {
         return timeLogRepository.countTimeLogsErrorByMonth();
     }
 

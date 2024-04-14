@@ -45,6 +45,7 @@ public class JwtTokenProvider {
                 .compact();
         return token;
     }
+    // generate refresh token
     public String generateRefreshToken(Map<String, Object> extraClaims, Authentication authentication){
         String username = authentication.getName();
         Date currentDate = new Date();
@@ -60,6 +61,7 @@ public class JwtTokenProvider {
     }
 
 
+    // get key from jwtSecret
     private Key key(){
         return Keys.hmacShaKeyFor(
                 Decoders.BASE64.decode(jwtSecret)

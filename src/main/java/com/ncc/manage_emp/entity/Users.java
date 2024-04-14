@@ -17,7 +17,7 @@ import java.util.*;
 public class Users implements Serializable {
 
 
-    @Id
+    @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

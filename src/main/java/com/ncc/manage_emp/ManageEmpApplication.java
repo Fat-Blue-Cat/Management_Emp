@@ -180,8 +180,8 @@ public class ManageEmpApplication  implements CommandLineRunner {
 
 
 //			=========== EXAMPLE SINGLETON AND PROTOTYPE ================
-		System.out.println(prototype1 == prototype2);
-		System.out.println(singleTon1 == singleTon2);
+		System.out.println(prototype1 == prototype2); //false
+		System.out.println(singleTon1 == singleTon2);//true
 
 
 		// =========== EXAMPLE FETCH LAZY AND EAGER ======================

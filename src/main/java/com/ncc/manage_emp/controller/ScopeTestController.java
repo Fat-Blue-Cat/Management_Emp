@@ -41,6 +41,14 @@ public class ScopeTestController {
         return customer.getDataRequestScope().getName();
     }
 
+
+
+    // SCOPE SESSION WHEN REQUEST IS CALLED, BEAN IS CREATED
+    @RequestMapping("/nameSS")
+    public String helloSS() {
+        System.out.println(customer);
+        return customer.getDataSessionScope().getName();
+    }
     // UPDATE SESSION CURRENT
     @RequestMapping("/nameSSUpdated")
     public String helloSSUpdated() {
@@ -49,10 +57,4 @@ public class ScopeTestController {
         return customer.getDataSessionScope().getName();
     }
 
-    // SCOPE SESSION WHEN REQUEST IS CALLED, BEAN IS CREATED
-    @RequestMapping("/nameSS")
-    public String helloSS() {
-        System.out.println(customer);
-        return customer.getDataSessionScope().getName();
-    }
 }

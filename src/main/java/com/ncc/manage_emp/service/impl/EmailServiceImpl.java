@@ -60,7 +60,7 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-//    @Async
+    @Async
     @EventListener
     public void sendMailWhenUpdateRole(UpdateRoleEvent updateRoleEvent) throws InterruptedException {
 

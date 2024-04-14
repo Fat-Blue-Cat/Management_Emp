@@ -8,7 +8,7 @@ my:
 spring:
   profiles:
     include: common, ex,local
-#    include: common, local,ex
+
   jpa:
     properties:
       hibernate:
